@@ -8,7 +8,7 @@ RUNTIME_DOCKER_IMAGE_NAME = $(REGISTRY_DOCKER_ENDPOINT)core
 RUNTIME_DOCKER_IMAGE = $(RUNTIME_DOCKER_IMAGE_NAME):$(TAG)
 GOBIN = $(shell go env GOPATH)/bin
 
-RELEASE_TAG = v1.2.6
+RELEASE_TAG = v1.2.7
 
 build:
 	go build -o runtime main.go
