@@ -19,6 +19,7 @@ import (
 
 const (
 	retryInterval = time.Millisecond * 50
+	maxRetry      = 200
 )
 
 // CoreRuntimeRequest - Structure for a request from core runtime to sub-runtime with event, context, and handler informations to dynamically import
@@ -158,7 +159,7 @@ func (fn FunctionInvoker) streamRequest(reqBody CoreRuntimeRequest) (res *http.R
 	// Try again, if cold-start, sub-runtime may still be starting-up, try for next 10 seconds, or until it responds properly
 	done := false
 	retries := 0
-	for !done && retries < 200 {
+	for !done && retries < maxRetry {
 		res, err = fn.client.Do(request)
 		if err != nil {
 			time.Sleep(retryInterval)
@@ -170,7 +171,7 @@ func (fn FunctionInvoker) streamRequest(reqBody CoreRuntimeRequest) (res *http.R
 
 	// An error occured
 	if !done {
-		return nil, fmt.Errorf("too many retries, sub-runtime server did not come up in %v seconds", retryInterval/1000*200)
+		return nil, fmt.Errorf("too many retries, sub-runtime server did not come up in %v, last error: %s", retryInterval * maxRetry, err)
 	}
 	return
 }
