@@ -1,4 +1,4 @@
-FROM golang:1.13.11-alpine3.11 AS build-env
+FROM golang:1.16.8-alpine3.14 AS build-env
 LABEL intermediate=true
 
 COPY ./ /home/build
@@ -6,7 +6,7 @@ WORKDIR /home/build
 RUN go build -o /go/bin/runtime main.go
 
 # Final stage
-FROM alpine:3.11
+FROM alpine:3.14
 
 RUN apk add --no-cache ca-certificates
 
